@@ -24,7 +24,7 @@
 </head>
 <!-- TODO: change the application name if it is modified -->
 <body data-mwf-application="MyApplication" class="mwf-loading-app">
-
+<!--Übersicht Listenansicht-->
 <!-- TODO-REPEATED: add new views here -->
 <div class="mwf-view mwf-view-initial" data-mwf-viewcontroller="ListviewViewController" id="mediaOverview">
     <header>
@@ -33,14 +33,14 @@
         <button id="myapp-addNewMediaItem" class="mwf-imgbutton mwf-img-plus mwf-right-align"></button>
     </header>
     <main class="mwf-scrollview">
-        <ul class="mwf-listview" data-mwf-listitem-view="myapp-listitem">
-            <li class="mwf-listitem mwf-li-title-subtitle mwf-template" data-mwf-templatename="myapp-listitem">
-            <img  class="mwf-left-align"  src="https://picsum.photos/100/100"/>
+        <ul class="mwf-listview" data-mwf-listitem-view="myapp-listitem" data-mwf-listitem-menu="myapp-mediaItemMenu">
+            <li class="mwf-listitem mwf-li-title-subtitle mwf-template mwf-databind" data-mwf-templatename="myapp-listitem">
+            <img class="mwf-left-align" src="{{src}}"/>
                 <div class="mwf-li-titleblock">
-                   <h2>item</h2>
-                    <h3>lorem ipsum</h3>
+                   <h2>{{title}}</h2>
+                    <h3>{{added}}</h3>
                 </div>
-                    <button class="mwf-imgbutton mwf-img-options-vertical mwf-right-align"></button>
+                    <button class="mwf-imgbutton mwf-img-options-vertical mwf-right-align mwf-listitem-menu-control"></button>
             </li>
         </ul>
 
@@ -49,7 +49,32 @@
         <button class="mwf-imgbutton mwf-img-refresh mwf-right-align"></button>
     </footer>
 </div>
-
+<!--aktionsmenü-->
+<div class="mwf-listitem-menu mwf-dialog mwf-popup mwf-template mwf-databind" data-mwf-templatename="myapp-mediaItemMenu">
+    <header>
+        <h2 class="mwf-dyncontent">{{title}}</h2>
+    </header>
+    <main>
+        <ul>
+            <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetaction="deleteItem">Löschen</li>
+            <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetaction="editItem">Editieren</li>
+        </ul>
+    </main>
+</div>
+<!--leseansicht-->
+<div class="mwf-view " id="myapp-mediaReadview" data-mwf-viewcontroller="ReadviewViewController">
+    <header>
+        <button class ="mwf-left-align mwf-imgbutton mwf-img-sandwich"></button>
+        <h1 class="mwf-left-align mwf-dyncontent">{{title}}</h1>
+        <button class="mwf-right-align mwf-imgbutton mwf-img-delete"></button>
+    </header>
+    <main class="mwf-scrollview">
+        <img src="https://picsum.photos/100/300"/>
+    </main>
+    <footer>
+        <button class ="mwf-left-align mwf-imgbutton mwf-img-backward mwf-back"></button>
+    </footer>
+</div>
 </body>
 
 </html>

@@ -4,7 +4,8 @@
 import {mwf} from "vfh-iam-mwf-base";
 import {mwfUtils} from "vfh-iam-mwf-base";
 import * as entities from "../model/MyEntities.js";
-import {MyEntity} from "../model/MyEntities.js";
+import {GenericCRUDImplLocal} from "vfh-iam-mwf-base";
+import {MediaItem, MyEntity} from "../model/MyEntities.js";
 
 export default class ListviewViewController extends mwf.ViewController {
 
@@ -12,6 +13,7 @@ export default class ListviewViewController extends mwf.ViewController {
     args;
     root;
     // TODO-REPEATED: declare custom instance attributes for this controller
+    crudops;
     items;
     addNewMediaItemElement;
     /*
@@ -26,11 +28,11 @@ export default class ListviewViewController extends mwf.ViewController {
             const selectedSrc= srcOptions[Date.now() % srcOptions.length];
             const selectedTitle= titleOptions[Date.now() % titleOptions.length];
             const newMediaItem = new entities.MediaItem(selectedTitle,selectedSrc);
-            this.addToListview(newMediaItem);
-            // alert("Add new media item");
+            this.crudops.create(newMediaItem).then(createdItem => this.addToListview(createdItem));
         };
-
-        this.initialiseListview(this.items);
+        // this.items = items;
+        this.crudops.readAll().then(items => this.initialiseListview(items));
+        // this.initialiseListview(this.items);
 
         // call the superclass once creation is done
         super.oncreate();
@@ -41,12 +43,14 @@ export default class ListviewViewController extends mwf.ViewController {
         super();
 
         console.log("ListviewViewController()");
-        this.items = [
-            new entities.MediaItem("lorem","https://picsum.photos/100/100"),
-            new entities.MediaItem("ipsum","https://picsum.photos/200/150"),
-            new entities.MediaItem("dolor","https://picsum.photos/100/300"),
-            new entities.MediaItem("sit","https://picsum.photos/200/300")
-        ]
+       //  this.items = [
+       //      new entities.MediaItem("lorem","https://picsum.photos/100/100"),
+       //      new entities.MediaItem("ipsum","https://picsum.photos/200/150"),
+       //      new entities.MediaItem("dolor","https://picsum.photos/100/300"),
+       //      new entities.MediaItem("sit","https://picsum.photos/200/300")
+       //  ];
+       this.crudops = GenericCRUDImplLocal.newInstance("MediaItem");
+
     }
 
     /*
@@ -61,13 +65,13 @@ export default class ListviewViewController extends mwf.ViewController {
      * for views with listviews: bind a list item to an item view
      * TODO: delete if no listview is used or if databinding uses ractive templates
      */
-    bindListItemView(listviewid, itemview, itemobj) {
-        // TODO: implement how attributes of itemobj shall be displayed in itemview
-        console.log("ListviewViewController(): ", itemview, itemobj);
-        itemview.root.querySelector("img").src =itemobj.src;
-        itemview.root.querySelector("h2").textContent =itemobj.title;
-        itemview.root.querySelector("h3").textContent =itemobj.added;
-    }
+    // bindListItemView(listviewid, itemview, itemobj) {
+    //     // TODO: implement how attributes of itemobj shall be displayed in itemview
+    //     // console.log("ListviewViewController(): ", itemview, itemobj);
+    // //     itemview.root.querySelector("img").src = itemobj.src;
+    // //     itemview.root.querySelector("h2").textContent =itemobj.title + " " + itemobj._id;
+    // //     itemview.root.querySelector("h3").textContent =itemobj.added;
+    //  }
 
     /*
      * for views with listviews: react to the selection of a listitem
@@ -75,7 +79,7 @@ export default class ListviewViewController extends mwf.ViewController {
      */
     onListItemSelected(itemobj, listviewid) {
         // TODO: implement how selection of itemobj shall be handled
-        console.log("onsListItemSelected(): ");
+        this.nextView("myapp-mediaReadview",{item:itemobj});
     }
 
     /*
@@ -84,6 +88,7 @@ export default class ListviewViewController extends mwf.ViewController {
      */
     onListItemMenuItemSelected(menuitemview, itemobj, listview) {
         // TODO: implement how selection of the option menuitemview for itemobj shall be handled
+        super.onListItemMenuItemSelected(menuitemview, itemobj, listview);
     }
 
     /*
@@ -97,4 +102,12 @@ export default class ListviewViewController extends mwf.ViewController {
         // TODO: implement action bindings for dialog, accessing dialog.root
     }
 
+    deleteItem(item) {
+    this.crudops.delete(item._id).then(deleted => this.removeFromListview(item._id));
+    }
+
+    editItem(item) {
+        item.title += (" " + item.title);
+        this.crudops.update(item._id, item).then(() => this.updateInListview(item._id,item));
+    }
 }

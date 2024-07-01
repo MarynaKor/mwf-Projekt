@@ -2,3 +2,6 @@
 h1{
     text-transform: uppercase;
 }
+#myapp-mediaReadview main img{
+    width: 100%;
+}
