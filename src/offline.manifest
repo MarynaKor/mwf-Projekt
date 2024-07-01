@@ -1,0 +1,65 @@
+CACHE MANIFEST
+
+# v0.0.21 - 2024-02-21-1
+# To be used together with the OfflineCacheServiceWorker. See https://github.com/dieschnittstelle/org.dieschnittstelle.iam.mwf.app.sample for an example.
+
+# ATTENTION: IF THIS FILE REFERENCES ANY UNAVAILABLE RESSOURCES, NO CACHE WILL BE CREATED!!!
+
+########################
+# cached resources
+########################
+CACHE:
+# js and css bundles
+app-js.bundle.min.js
+app-style.bundle.min.css
+app-style.bundle.min.js
+
+# the entry point
+index.html
+
+# the webapp manifest
+pwa/webapp-manifest.json
+
+# img resources
+0fdfe95851b09cb40d0a.png
+112378bb00ce7e9faac3.png
+1bdae23c9337197978ae.png
+1c3440a1c977a415e728.png
+2610726fd5bf47ea852b.png
+31c8a5dd96a805a132a1.png
+41dc8e217815816fb678.png
+420709a2d01fcee9e7d5.png
+50baa06493e7deb8bdde.png
+515bbe433414f4730c4f.png
+59f068b6a3c03ad28e5c.png
+63ba147c07b781ba6b8d.png
+6dd0bd6569c56eedfbac.png
+74803a00a745f14e096d.png
+77b9e573d119817f449c.png
+7ca608dd7a2d1307e979.png
+a5a46ba0ce3277640519.png
+ab1502bc9af61f2b8d2c.png
+ada2fdaadd8e4b82c239.png
+c2287512b2fb76fdf8be.png
+c6fc8856bd98e8b7c39b.png
+c82224994fdf3bd0e38d.png
+c93a6567df4535fa8c37.png
+ccddb3f6aa937691e669.png
+d0262b0d713a65afad3e.png
+d81e89c49a6d5f4824d9.png
+e3ee6a1089db4cfc6878.png
+
+########################
+# network resources
+########################
+
+NETWORK:
+api
+content
+available
+http://lorempixel.com
+http://cdn.leafletjs.com
+http://a.tile.osm.org
+http://b.tile.osm.org
+http://c.tile.osm.org
+http://d.tile.osm.org
