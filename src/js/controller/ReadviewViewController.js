@@ -24,7 +24,7 @@ export default class ReadviewViewController extends mwf.ViewController {
         this.root.querySelector("main img").src = this.mediaItem.src;
         // call the superclass once creation is done
         this.root.querySelector("header .mwf-img-delete").onclick = () => {
-            this.crudops.delete(this.mediaItem._id).then((response) => {
+            this.mediaItem.delete().then((response) => {
                 this.previousView({item: this.mediaItem},"itemDeleted");
             });
         }
