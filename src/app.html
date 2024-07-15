@@ -57,7 +57,7 @@
     <main>
         <ul>
             <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetaction="deleteItem">Löschen</li>
-            <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetaction="editItem">Editieren</li>
+            <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetview="myapp-mediaEditview">Editieren</li>
         </ul>
     </main>
 </div>
@@ -76,22 +76,26 @@
     </footer>
 </div>
 <!--Editieransicht-->
+<!--data: {item} diese data kommt editierten Lement oder vom neuen beides klappt-->
 <div class="mwf-view " id="myapp-mediaEditview" data-mwf-viewcontroller="EditviewViewController">
-    <header>
-        <button class="mwf-left-align mwf-imgbutton mwf-img-sandwich"></button>
-        <h1 class="mwf-left-align mwf-dyncontent">Titel</h1>
-        <button class="mwf-right-align mwf-imgbutton mwf-img-disk" type="submit" form="myapp-mediaEditviewForm"></button>
-    </header>
-    <main>
-        <form id="myapp-mediaEditviewForm">
-            <input name="title" type="text" placeholder="Titel"/>
-            <input name= "src" type="url" placeholder="URL"/>
-        </form>
-    </main>
-    <footer>
-        <button class ="mwf-left-align mwf-imgbutton mwf-img-backward mwf-back"></button>
-    </footer>
+    <div class="mwf-template mwf-databind" data-mwf-templatename="myapp-mediaEditviewTemplate">
+        <header>
+            <button class="mwf-left-align mwf-imgbutton mwf-img-sandwich"></button>
+            <h1 class="mwf-left-align mwf-dyncontent">{{item.title}}</h1>
+            <button class="mwf-right-align mwf-imgbutton mwf-img-disk" type="submit" form="myapp-mediaEditviewForm"></button>
+        </header>
+        <main>
+            <form id="myapp-mediaEditviewForm">
+                <input name="title" type="text" placeholder="Titel" value="{{item.title}}"/>
+                <input name= "src" type="url" placeholder="URL" value="{{item.src}}"/>
+            </form>
+        </main>
+        <footer>
+            <button class ="mwf-left-align mwf-imgbutton mwf-img-backward mwf-back"></button>
+        </footer>
+    </div>
 </div>
+
 </body>
 
 </html>

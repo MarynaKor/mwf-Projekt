@@ -17,16 +17,31 @@ export default class EditviewViewController extends mwf.ViewController {
      */
     async oncreate() {
         // TODO: do databinding, set listeners, initialise the view
-        const editviewForm = this.root.querySelector("main form");
-        editviewForm.onsubmit = () => {
+        console.log("oncreate(): this.args: ", this.args);
+        this.mediaItem = this.args?.item || new entities.MediaItem();
+
+        this.bindElement("myapp-mediaEditviewTemplate", {item: this.mediaItem}, this.root);
+
+       this.editviewForm = this.root.querySelector("main form");
+
+        this.editviewForm.onsubmit = () => {
             //handle the submit
-            const selectedSrc= editviewForm.src.value;
-            const selectedTitle= editviewForm.title.value;
-            const newMediaItem = new entities.MediaItem(selectedTitle,selectedSrc);
-            newMediaItem.create().then(() => {
-                this.previousView({item: newMediaItem}, "itemCreated");
-                // this.addToListview(newMediaItem)
-            });
+            // const selectedSrc= this.editviewForm.src.value;
+            // const selectedTitle= this.editviewForm.title.value;
+            //
+            // const newMediaItem = new entities.MediaItem(selectedTitle,selectedSrc);
+            alert("newMediaItem: " + this.mediaItem.src + "; " + this.mediaItem.title);
+
+            if (this.mediaItem.created){
+                this.mediaItem.update().then(() => {
+                    this.previousView({item: this.mediaItem}, "itemUpdated");
+                })
+            }else {
+                this.mediaItem.create().then(() => {
+                    this.previousView({item: this.mediaItem}, "itemCreated");
+                });
+            }
+
             //return false to prevent form data submission by the browser
 
             return false;
@@ -35,6 +50,12 @@ export default class EditviewViewController extends mwf.ViewController {
         super.oncreate();
     }
 
+    // async onresume() {
+    //     this.editviewForm.src.value = this.mediaItem.src;
+    //     this.editviewForm.title.value = this.mediaItem.title;
+    //
+    //     super.onresume();
+    // }
 
     constructor() {
         super();
