@@ -59,6 +59,9 @@ export default class ListviewViewController extends mwf.ViewController {
      */
     async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
         // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
+        if (returnStatus === "itemDeleted"){
+            this.removeFromListview(returnValue.item._id);
+        }
     }
 
     /*
