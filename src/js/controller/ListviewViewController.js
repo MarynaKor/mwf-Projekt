@@ -5,7 +5,7 @@ import {mwf} from "vfh-iam-mwf-base";
 import {mwfUtils} from "vfh-iam-mwf-base";
 import * as entities from "../model/MyEntities.js";
 import {GenericCRUDImplLocal} from "vfh-iam-mwf-base";
-import {MediaItem, MyEntity} from "../model/MyEntities.js";
+// import {MediaItem, MyEntity} from "../model/MyEntities.js";
 
 export default class ListviewViewController extends mwf.ViewController {
 
@@ -28,10 +28,16 @@ export default class ListviewViewController extends mwf.ViewController {
             const selectedSrc= srcOptions[Date.now() % srcOptions.length];
             const selectedTitle= titleOptions[Date.now() % titleOptions.length];
             const newMediaItem = new entities.MediaItem(selectedTitle,selectedSrc);
-            this.crudops.create(newMediaItem).then(createdItem => this.addToListview(createdItem));
+            newMediaItem.create().then(() => this.addToListview(newMediaItem));
         };
         // this.items = items;
-        this.crudops.readAll().then(items => this.initialiseListview(items));
+        entities.MediaItem.readAll().then(items =>
+        {
+            if (items.length > 0) {
+                const firstItemFromList = items[0];
+            }
+            this.initialiseListview(items)
+        });
         // this.initialiseListview(this.items);
 
         // call the superclass once creation is done
@@ -49,7 +55,7 @@ export default class ListviewViewController extends mwf.ViewController {
        //      new entities.MediaItem("dolor","https://picsum.photos/100/300"),
        //      new entities.MediaItem("sit","https://picsum.photos/200/300")
        //  ];
-       this.crudops = GenericCRUDImplLocal.newInstance("MediaItem");
+       // this.crudops = GenericCRUDImplLocal.newInstance("MediaItem");
 
     }
 
@@ -106,11 +112,15 @@ export default class ListviewViewController extends mwf.ViewController {
     }
 
     deleteItem(item) {
-    this.crudops.delete(item._id).then(deleted => this.removeFromListview(item._id));
+    item.delete().then(() => {
+        this.removeFromListview(item._id)
+    });
     }
 
     editItem(item) {
         item.title += (" " + item.title);
-        this.crudops.update(item._id, item).then(() => this.updateInListview(item._id,item));
+        item.update().then(() => {
+            this.updateInListview(item._id,item)
+        });
     }
 }
