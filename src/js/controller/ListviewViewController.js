@@ -23,13 +23,16 @@ export default class ListviewViewController extends mwf.ViewController {
         // TODO: do databinding, set listeners, initialise the view
         this.addNewMediaItemElement = this.root.querySelector("#myapp-addNewMediaItem");
         this.addNewMediaItemElement.onclick = () => {
-            const srcOptions = ["https://picsum.photos/75/125","https://picsum.photos/125/175","https://picsum.photos/125/75"];
-            const titleOptions = ["lorem","ipsum","dolor"];
-            const selectedSrc= srcOptions[Date.now() % srcOptions.length];
-            const selectedTitle= titleOptions[Date.now() % titleOptions.length];
-            const newMediaItem = new entities.MediaItem(selectedTitle,selectedSrc);
-            newMediaItem.create().then(() => this.addToListview(newMediaItem));
+
+            // const srcOptions = ["https://picsum.photos/75/125","https://picsum.photos/125/175","https://picsum.photos/125/75"];
+            // const titleOptions = ["lorem","ipsum","dolor"];
+            // const selectedSrc= srcOptions[Date.now() % srcOptions.length];
+            // const selectedTitle= titleOptions[Date.now() % titleOptions.length];
+            // const newMediaItem = new entities.MediaItem(selectedTitle,selectedSrc);
+            // newMediaItem.create().then(() => this.addToListview(newMediaItem));
+            this.nextView("myapp-mediaEditview");
         };
+
         // this.items = items;
         entities.MediaItem.readAll().then(items =>
         {
@@ -67,6 +70,9 @@ export default class ListviewViewController extends mwf.ViewController {
         // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
         if (returnStatus === "itemDeleted" && returnValue.item){
             this.removeFromListview(returnValue.item._id);
+        }
+        else if (returnStatus === "itemCreated" && returnValue.item){
+            this.addToListview(returnValue.item);
         }
     }
 
