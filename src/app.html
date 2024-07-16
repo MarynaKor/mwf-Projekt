@@ -30,7 +30,8 @@
     <header>
         <button class="mwf-imgbutton mwf-img-sandwich mwf-left-align"></button>
         <h1 class="mwf-left-align">Medien</h1>
-        <button id="myapp-addNewMediaItem" class="mwf-imgbutton mwf-img-plus mwf-right-align"></button>
+<!--  entferne id="myapp-addNewMediaItem"      -->
+        <button id="myapp-addNewMediaItem" class="mwf-imgbutton  mwf-img-plus mwf-right-align"  ></button>
     </header>
     <main class="mwf-scrollview">
         <ul class="mwf-listview" data-mwf-listitem-view="myapp-listitem" data-mwf-listitem-menu="myapp-mediaItemMenu">
@@ -57,10 +58,24 @@
     <main>
         <ul>
             <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetaction="deleteItem">Löschen</li>
-            <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetview="myapp-mediaEditview">Editieren</li>
+            <li class="mwf-li-singletitle mwf-menu-item" data-mwf-targetaction="editItem">Editieren</li>
         </ul>
     </main>
 </div>
+<!--aktionsmenü..editieren-->
+<div class="mwf-dialog mwf-popup mwf-template mwf-databind mwf-view-component" data-mwf-viewcontroller="GenericDialogTemplateViewController" data-mwf-templatename="mediaItemDialog">
+    <main>
+        <h2>{{#if item.created}}Medium editieren{{else}}NeuesMedium{{/if}}</h2>
+        <form id="itemEditForm" on-submit="submitForm">
+            <input name="title" autocomplete="off" class="mwf-autofocus" type="text" placeholder="Titel" required="required" value="{{item.title}}"/>
+            <div class="mwf-buttonbar">
+                <button class="mwf-left-align mwf-button" disabled="{{#unlessitem.created}}disabled{{/unless}}" type="button" on-click="deleteItem">Löschen</button>
+                <input class="mwf-button-prio mwf-right-align mwf-button" type="submit" value="Hinzufügen" value="{{#ifitem.created}}Ändern{{else}}Hinzufügen{{/if}}"/>
+            </div>
+        </form>
+    </main>
+</div>
+
 <!--leseansicht-->
 <div class="mwf-view " id="myapp-mediaReadview" data-mwf-viewcontroller="ReadviewViewController">
     <header>

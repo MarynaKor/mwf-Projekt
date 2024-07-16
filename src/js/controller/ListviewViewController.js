@@ -16,6 +16,7 @@ export default class ListviewViewController extends mwf.ViewController {
     crudops;
     items;
     addNewMediaItemElement;
+
     /*
      * for any view: initialise the view
      */
@@ -30,12 +31,12 @@ export default class ListviewViewController extends mwf.ViewController {
             // const selectedTitle= titleOptions[Date.now() % titleOptions.length];
             // const newMediaItem = new entities.MediaItem(selectedTitle,selectedSrc);
             // newMediaItem.create().then(() => this.addToListview(newMediaItem));
-            this.nextView("myapp-mediaEditview");
+            // this.nextView("myapp-mediaEditview");
+            this.createNewItem();
         };
 
         // this.items = items;
-        entities.MediaItem.readAll().then(items =>
-        {
+        entities.MediaItem.readAll().then(items => {
             if (items.length > 0) {
                 const firstItemFromList = items[0];
             }
@@ -52,13 +53,13 @@ export default class ListviewViewController extends mwf.ViewController {
         super();
 
         console.log("ListviewViewController()");
-       //  this.items = [
-       //      new entities.MediaItem("lorem","https://picsum.photos/100/100"),
-       //      new entities.MediaItem("ipsum","https://picsum.photos/200/150"),
-       //      new entities.MediaItem("dolor","https://picsum.photos/100/300"),
-       //      new entities.MediaItem("sit","https://picsum.photos/200/300")
-       //  ];
-       // this.crudops = GenericCRUDImplLocal.newInstance("MediaItem");
+        //  this.items = [
+        //      new entities.MediaItem("lorem","https://picsum.photos/100/100"),
+        //      new entities.MediaItem("ipsum","https://picsum.photos/200/150"),
+        //      new entities.MediaItem("dolor","https://picsum.photos/100/300"),
+        //      new entities.MediaItem("sit","https://picsum.photos/200/300")
+        //  ];
+        // this.crudops = GenericCRUDImplLocal.newInstance("MediaItem");
 
     }
 
@@ -68,14 +69,12 @@ export default class ListviewViewController extends mwf.ViewController {
      */
     async onReturnFromNextView(nextviewid, returnValue, returnStatus) {
         // TODO: check from which view, and possibly with which status, we are returning, and handle returnValue accordingly
-        if (returnStatus === "itemDeleted" && returnValue.item){
+        if (returnStatus === "itemDeleted" && returnValue.item) {
             this.removeFromListview(returnValue.item._id);
-        }
-        else if (returnStatus === "itemCreated" && returnValue.item){
+        } else if (returnStatus === "itemCreated" && returnValue.item) {
             this.addToListview(returnValue.item);
-        }
-        else if (returnStatus === "itemUpdated" && returnValue.item){
-            this.updateInListview(returnValue.item._id,returnValue.item);
+        } else if (returnStatus === "itemUpdated" && returnValue.item) {
+            this.updateInListview(returnValue.item._id, returnValue.item);
         }
     }
 
@@ -97,7 +96,7 @@ export default class ListviewViewController extends mwf.ViewController {
      */
     onListItemSelected(itemobj, listviewid) {
         // TODO: implement how selection of itemobj shall be handled
-        this.nextView("myapp-mediaReadview",{item:itemobj});
+        this.nextView("myapp-mediaReadview", {item: itemobj});
     }
 
     /*
@@ -113,23 +112,53 @@ export default class ListviewViewController extends mwf.ViewController {
      * for views with dialogs
      * TODO: delete if no dialogs are used or if generic controller for dialogs is employed
      */
-    bindDialog(dialogid, dialogview, dialogdataobj) {
-        // call the supertype function
-        super.bindDialog(dialogid, dialogview, dialogdataobj);
+    // bindDialog(dialogid, dialogview, dialogdataobj) {
+    //     // call the supertype function
+    //     super.bindDialog(dialogid, dialogview, dialogdataobj);
+    //
+    //     // TODO: implement action bindings for dialog, accessing dialog.root
+    // }
 
-        // TODO: implement action bindings for dialog, accessing dialog.root
+    createNewItem() {
+        var newItem = new entities.MediaItem("", "https://picsum.photos/100/100");
+        this.showDialog("mediaItemDialog", {
+            item: newItem,
+            actionBindings: {
+                submitForm: ((event) => {
+                    event.original.preventDefault();
+                    newItem.create().then(() => {
+                        this.addToListview(newItem);
+                    });
+                    this.hideDialog();
+                })
+            }
+        });
     }
 
     deleteItem(item) {
-    item.delete().then(() => {
-        this.removeFromListview(item._id)
-    });
+        item.delete().then(() => {
+            this.removeFromListview(item._id)
+        });
     }
 
     editItem(item) {
-        item.title += (" " + item.title);
-        item.update().then(() => {
-            this.updateInListview(item._id,item)
+        this.showDialog("mediaItemDialog", {
+            item: item,
+            actionBindings: {
+                submitForm: ((event) => {
+                    event.original.preventDefault();
+                    item.update().then(() => {
+                        this.updateInListview(item._id, item);
+                    })
+
+                        this.hideDialog();
+                }),
+                deleteItem: ((event) => {
+                    this.deleteItem(item);
+                    this.hideDialog();
+                })
+            }
         });
     }
 }
+
